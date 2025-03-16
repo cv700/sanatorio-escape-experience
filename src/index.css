@@ -1,92 +1,50 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 40 30% 98%;
+    --foreground: 38 25% 10%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 40 20% 98%;
+    --card-foreground: 38 25% 10%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 40 20% 98%;
+    --popover-foreground: 38 25% 10%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 200 25% 55%;
+    --primary-foreground: 200 25% 98%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 40 20% 92%;
+    --secondary-foreground: 38 25% 15%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 40 10% 90%;
+    --muted-foreground: 38 15% 40%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 100 15% 75%;
+    --accent-foreground: 38 25% 15%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 38 10% 85%;
+    --input: 38 10% 85%;
+    --ring: 200 25% 55%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 40 30% 98%;
+    --sidebar-foreground: 38 25% 15%;
+    --sidebar-primary: 200 25% 55%;
+    --sidebar-primary-foreground: 200 25% 98%;
+    --sidebar-accent: 40 20% 92%;
+    --sidebar-accent-foreground: 38 25% 15%;
+    --sidebar-border: 38 10% 85%;
+    --sidebar-ring: 200 25% 55%;
   }
 }
 
@@ -96,6 +54,66 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-sanatorio-beige text-sanatorio-charcoal font-sans antialiased;
   }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-white/40 backdrop-blur-sm border border-white/60 rounded-xl shadow-sm;
+  }
+  
+  .section-container {
+    @apply w-full max-w-7xl mx-auto px-6 md:px-8 py-16 md:py-24;
+  }
+  
+  .animate-delay-100 {
+    animation-delay: 100ms;
+  }
+  
+  .animate-delay-200 {
+    animation-delay: 200ms;
+  }
+  
+  .animate-delay-300 {
+    animation-delay: 300ms;
+  }
+  
+  .animate-delay-400 {
+    animation-delay: 400ms;
+  }
+  
+  .animate-delay-500 {
+    animation-delay: 500ms;
+  }
+
+  .transition-all-300 {
+    @apply transition-all duration-300 ease-in-out;
+  }
+  
+  .transition-all-500 {
+    @apply transition-all duration-500 ease-in-out;
+  }
+  
+  .wave-bg {
+    background: linear-gradient(270deg, var(--sanatorio-blue-light) 0%, var(--sanatorio-blue) 100%);
+    background-size: 200% 100%;
+  }
+  
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .text-shadow-sm {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+}
+
+:root {
+  --sanatorio-blue-light: #C4DCF0;
+  --sanatorio-blue: #ADC9DD;
 }

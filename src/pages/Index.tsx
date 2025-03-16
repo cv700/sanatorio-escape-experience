@@ -47,19 +47,19 @@ const Index = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-sanatorio-beige flex items-center justify-center">
+      <div className="min-h-screen bg-sanatorio-darkGreen flex items-center justify-center">
         <div className="glass-panel p-8 max-w-md text-center">
-          <h2 className="text-2xl font-display text-sanatorio-charcoal mb-4">
-            We're experiencing a moment of tranquility
+          <h2 className="text-2xl font-display text-sanatorio-neon mb-4">
+            SYSTEM MALFUNCTION
           </h2>
-          <p className="text-sanatorio-charcoal/80">
-            Our virtual retreat is taking a short break. Please refresh the page or try again later.
+          <p className="text-sanatorio-mint/80">
+            Virtual retreat system experiencing temporary errors. Please reconnect.
           </p>
           <button 
             onClick={() => window.location.reload()}
-            className="mt-6 glass-panel px-6 py-2 rounded-full transition-all-300 hover:shadow-md text-sanatorio-charcoal font-medium"
+            className="mt-6 glass-panel px-6 py-2 rounded-full transition-all-300 hover:shadow-md text-sanatorio-neon font-medium border border-sanatorio-neon/50"
           >
-            Reconnect
+            RECONNECT
           </button>
         </div>
       </div>
@@ -67,13 +67,22 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-sanatorio-beige">
-      <Header />
-      <Hero />
-      <Experience />
-      <MapComponent />
-      <Ambience />
-      <Footer />
+    <div className="min-h-screen bg-sanatorio-darkGreen relative">
+      {/* Background image container - will be used for looping background */}
+      <div className="fixed inset-0 z-0 lofi-bg bg-digital-gradient bg-lofi-noise">
+        {/* Digital scanlines effect */}
+        <div className="absolute inset-0 digital-scanline animate-scan"></div>
+      </div>
+      
+      {/* Content */}
+      <div className="relative z-10">
+        <Header />
+        <Hero />
+        <Experience />
+        <MapComponent />
+        <Ambience />
+        <Footer />
+      </div>
     </div>
   );
 };

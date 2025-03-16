@@ -1,5 +1,4 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=VT323&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,44 +6,44 @@
 
 @layer base {
   :root {
-    --background: 40 30% 98%;
-    --foreground: 38 25% 10%;
+    --background: 150 30% 98%;
+    --foreground: 150 25% 10%;
 
-    --card: 40 20% 98%;
-    --card-foreground: 38 25% 10%;
+    --card: 150 20% 98%;
+    --card-foreground: 150 25% 10%;
 
-    --popover: 40 20% 98%;
-    --popover-foreground: 38 25% 10%;
+    --popover: 150 20% 98%;
+    --popover-foreground: 150 25% 10%;
 
-    --primary: 200 25% 55%;
-    --primary-foreground: 200 25% 98%;
+    --primary: 142 25% 45%;
+    --primary-foreground: 142 25% 98%;
 
-    --secondary: 40 20% 92%;
-    --secondary-foreground: 38 25% 15%;
+    --secondary: 150 20% 92%;
+    --secondary-foreground: 150 25% 15%;
 
-    --muted: 40 10% 90%;
-    --muted-foreground: 38 15% 40%;
+    --muted: 150 10% 90%;
+    --muted-foreground: 150 15% 40%;
 
-    --accent: 100 15% 75%;
-    --accent-foreground: 38 25% 15%;
+    --accent: 100 25% 75%;
+    --accent-foreground: 150 25% 15%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 38 10% 85%;
-    --input: 38 10% 85%;
-    --ring: 200 25% 55%;
+    --border: 150 10% 85%;
+    --input: 150 10% 85%;
+    --ring: 142 25% 45%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 40 30% 98%;
-    --sidebar-foreground: 38 25% 15%;
-    --sidebar-primary: 200 25% 55%;
-    --sidebar-primary-foreground: 200 25% 98%;
-    --sidebar-accent: 40 20% 92%;
-    --sidebar-accent-foreground: 38 25% 15%;
-    --sidebar-border: 38 10% 85%;
-    --sidebar-ring: 200 25% 55%;
+    --sidebar-background: 150 30% 98%;
+    --sidebar-foreground: 150 25% 15%;
+    --sidebar-primary: 142 25% 45%;
+    --sidebar-primary-foreground: 142 25% 98%;
+    --sidebar-accent: 150 20% 92%;
+    --sidebar-accent-foreground: 150 25% 15%;
+    --sidebar-border: 150 10% 85%;
+    --sidebar-ring: 142 25% 45%;
   }
 }
 
@@ -54,7 +53,7 @@
   }
 
   body {
-    @apply bg-sanatorio-beige text-sanatorio-charcoal font-sans antialiased;
+    @apply bg-sanatorio-darkGreen text-sanatorio-mint font-sans antialiased;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -64,7 +63,7 @@
 
 @layer components {
   .glass-panel {
-    @apply bg-white/40 backdrop-blur-sm border border-white/60 rounded-xl shadow-sm;
+    @apply bg-black/30 backdrop-blur-sm border border-sanatorio-neon/30 rounded-xl shadow-sm shadow-sanatorio-neon/20;
   }
   
   .section-container {
@@ -100,7 +99,7 @@
   }
   
   .wave-bg {
-    background: linear-gradient(270deg, var(--sanatorio-blue-light) 0%, var(--sanatorio-blue) 100%);
+    background: linear-gradient(270deg, var(--sanatorio-green-light) 0%, var(--sanatorio-green) 100%);
     background-size: 200% 100%;
   }
   
@@ -109,11 +108,54 @@
   }
   
   .text-shadow-sm {
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+
+  .digital-scanline {
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(50, 255, 154, 0.05) 0.5%,
+      transparent 1%
+    );
+    pointer-events: none;
+  }
+
+  .pixel-border {
+    border-image-slice: 1;
+    border-image-source: linear-gradient(to right, var(--sanatorio-neon), var(--sanatorio-mint));
+  }
+
+  .lofi-bg {
+    background-size: cover;
+    background-position: center;
+    position: relative;
+  }
+
+  .lofi-bg::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(0, 0, 0, 0.1) 0.2%,
+      transparent 0.4%
+    );
+    pointer-events: none;
+    z-index: 1;
   }
 }
 
 :root {
-  --sanatorio-blue-light: #C4DCF0;
-  --sanatorio-blue: #ADC9DD;
+  --sanatorio-green-light: #7EFCB4;
+  --sanatorio-green: #46D97F;
+  --sanatorio-neon: #32FF9A;
+  --sanatorio-mint: #E5FFF0;
+  --sanatorio-darkGreen: #102518;
+  --sanatorio-darkGray: #221F26;
 }
+

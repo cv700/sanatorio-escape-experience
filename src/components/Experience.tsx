@@ -1,9 +1,24 @@
 
-import { useState } from 'react';
-import { Sun, Waves, Wind } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Sun, Waves, Wind, Volume2, VolumeX } from 'lucide-react';
+import CoastalExperience from './experiences/CoastalExperience';
+import GardenExperience from './experiences/GardenExperience';
+import MeditationExperience from './experiences/MeditationExperience';
+import { Button } from './ui/button';
 
 const Experience = () => {
   const [activeMode, setActiveMode] = useState('coastal');
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const [volume, setVolume] = useState(0.5);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Audio file mapping for each experience
+  const audioFiles = {
+    coastal: '/audio/coastal-waves.mp3',
+    garden: '/audio/garden-ambience.mp3',
+    meditation: '/audio/meditation-bells.mp3'
+  };
 
   const experiences = [
     {
@@ -32,6 +47,67 @@ const Experience = () => {
     }
   ];
 
+  // Handle audio setup and changes
+  useEffect(() => {
+    // Create audio element if it doesn't exist
+    if (!audioRef.current) {
+      audioRef.current = new Audio();
+    }
+
+    // Update audio source when mode changes
+    const audioElement = audioRef.current;
+    audioElement.src = audioFiles[activeMode as keyof typeof audioFiles] || '';
+    audioElement.loop = true;
+    audioElement.volume = isMuted ? 0 : volume;
+
+    // Play/pause based on state
+    if (isPlaying && !isMuted) {
+      const playPromise = audioElement.play();
+      
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          console.error("Audio playback failed:", error);
+        });
+      }
+    } else {
+      audioElement.pause();
+    }
+
+    // Cleanup function
+    return () => {
+      audioElement.pause();
+    };
+  }, [activeMode, isPlaying, isMuted, volume]);
+
+  const togglePlay = () => {
+    setIsPlaying(!isPlaying);
+  };
+
+  const toggleMute = () => {
+    setIsMuted(!isMuted);
+    if (audioRef.current) {
+      audioRef.current.volume = isMuted ? volume : 0;
+    }
+  };
+
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newVolume = parseFloat(e.target.value);
+    setVolume(newVolume);
+    if (audioRef.current && !isMuted) {
+      audioRef.current.volume = newVolume;
+    }
+  };
+
+  const handleModeChange = (mode: string) => {
+    setActiveMode(mode);
+    // Reset play state when changing modes
+    setIsPlaying(false);
+    // Small delay before allowing play again
+    setTimeout(() => {
+      if (!isMuted) setIsPlaying(true);
+    }, 300);
+  };
+
   return (
     <section id="experience" className="relative py-20 md:py-32 overflow-hidden">
       {/* Background gradient */}
@@ -53,7 +129,7 @@ const Experience = () => {
           {experiences.map((exp) => (
             <button
               key={exp.id}
-              onClick={() => setActiveMode(exp.id)}
+              onClick={() => handleModeChange(exp.id)}
               className={`flex items-center gap-3 px-6 py-3 rounded-full transition-all-300 ${
                 activeMode === exp.id ? exp.activeColor : exp.color
               }`}
@@ -69,48 +145,68 @@ const Experience = () => {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <h3 className="text-2xl font-display text-sanatorio-charcoal">
-                {experiences.find(e => e.id === activeMode)?.title} Mode
+                {experiences.find(e => e.id === activeMode)?.title} Experience
               </h3>
               <p className="mt-4 text-sanatorio-charcoal/80 leading-relaxed">
                 {experiences.find(e => e.id === activeMode)?.description}
               </p>
-              <div className="mt-6 flex gap-4">
-                <button className="glass-panel hover:shadow-md px-5 py-2 rounded-full transition-all-300 text-sm font-medium text-sanatorio-charcoal">
-                  Start Experience
-                </button>
-                <button className="px-5 py-2 rounded-full transition-all-300 text-sm font-medium text-sanatorio-charcoal hover:text-sanatorio-deepBlue">
-                  Learn More
-                </button>
+              
+              {/* Audio controls */}
+              <div className="mt-6 flex flex-col gap-4">
+                <div className="flex items-center gap-3">
+                  <button 
+                    onClick={togglePlay}
+                    className="glass-panel hover:shadow-md p-3 rounded-full transition-all-300"
+                  >
+                    {isPlaying ? (
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-sanatorio-charcoal">
+                        <rect x="6" y="4" width="4" height="16"></rect>
+                        <rect x="14" y="4" width="4" height="16"></rect>
+                      </svg>
+                    ) : (
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-sanatorio-charcoal">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                      </svg>
+                    )}
+                  </button>
+                  
+                  <button
+                    onClick={toggleMute}
+                    className="glass-panel hover:shadow-md p-3 rounded-full transition-all-300"
+                  >
+                    {isMuted ? <VolumeX size={20} className="text-sanatorio-charcoal" /> : <Volume2 size={20} className="text-sanatorio-charcoal" />}
+                  </button>
+                  
+                  <div className="flex-1">
+                    <input
+                      type="range"
+                      min="0"
+                      max="1"
+                      step="0.01"
+                      value={volume}
+                      onChange={handleVolumeChange}
+                      className="w-full h-2 bg-sanatorio-charcoal/20 rounded-full appearance-none cursor-pointer"
+                      disabled={isMuted}
+                    />
+                  </div>
+                </div>
+                
+                <div className="flex gap-4">
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={togglePlay}
+                  >
+                    {isPlaying ? "Pause Experience" : "Start Experience"}
+                  </Button>
+                </div>
               </div>
             </div>
 
-            <div className={`aspect-[4/3] rounded-xl overflow-hidden shadow-lg transition-all-500 animate-pulse-gentle`}>
-              {activeMode === 'coastal' && (
-                <div className="w-full h-full bg-sanatorio-blue/30 flex items-center justify-center relative">
-                  <div className="absolute inset-0 animate-wave opacity-30" 
-                    style={{ 
-                      background: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' fill='%23ADC9DD' opacity='.5' class='shape-fill'%3E%3C/path%3E%3Cpath d='M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z' fill='%235C88A0' opacity='.3' class='shape-fill'%3E%3C/path%3E%3C/svg%3E")`,
-                      backgroundSize: "200% 100%", 
-                      backgroundRepeat: "repeat-x"
-                    }}
-                  />
-                  <span className="text-white font-medium text-shadow-sm">Visualizer Coming Soon</span>
-                </div>
-              )}
-              
-              {activeMode === 'garden' && (
-                <div className="w-full h-full bg-sanatorio-sage/30 flex items-center justify-center">
-                  <div className="absolute inset-0 bg-gradient-to-b from-sanatorio-sage/10 to-sanatorio-sage/40"></div>
-                  <span className="text-sanatorio-charcoal font-medium text-shadow-sm relative z-10">Visualizer Coming Soon</span>
-                </div>
-              )}
-              
-              {activeMode === 'meditation' && (
-                <div className="w-full h-full bg-sanatorio-stone/30 flex items-center justify-center">
-                  <div className="absolute inset-0 animate-breathe opacity-30 bg-gradient-to-br from-sanatorio-stone/10 to-sanatorio-stone/40"></div>
-                  <span className="text-sanatorio-charcoal font-medium text-shadow-sm relative z-10">Visualizer Coming Soon</span>
-                </div>
-              )}
+            <div className="aspect-[4/3] rounded-xl overflow-hidden shadow-lg border border-gray-200/30 animate-fade-in">
+              {activeMode === 'coastal' && <CoastalExperience isPlaying={isPlaying} />}
+              {activeMode === 'garden' && <GardenExperience isPlaying={isPlaying} />}
+              {activeMode === 'meditation' && <MeditationExperience isPlaying={isPlaying} />}
             </div>
           </div>
         </div>

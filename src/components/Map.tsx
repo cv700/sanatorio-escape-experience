@@ -1,23 +1,27 @@
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const MapComponent = () => {
   const mapRef = useRef<HTMLDivElement>(null);
+  const [hasError, setHasError] = useState(false);
   
   // This simulates a map without requiring an API key
-  // In a real implementation, you would integrate a mapping service like Mapbox
   useEffect(() => {
     if (!mapRef.current) return;
     
-    const ctx = setupCanvas();
-    if (!ctx) return;
-    
-    // Draw the simulated map
-    drawSimulatedMap(ctx);
-    
-    // Add animation
-    animateWater(ctx);
-    
+    try {
+      const ctx = setupCanvas();
+      if (!ctx) return;
+      
+      // Draw the simulated map
+      drawSimulatedMap(ctx);
+      
+      // Add animation
+      animateWater(ctx);
+    } catch (error) {
+      console.error("Error rendering map:", error);
+      setHasError(true);
+    }
   }, []);
   
   const setupCanvas = () => {
@@ -156,7 +160,7 @@ const MapComponent = () => {
       
       // Draw some wave lines
       for (let i = 0; i < 5; i++) {
-        const y = (height /.5) * i + offset;
+        const y = (height / 5) * i + offset;
         
         ctx.strokeStyle = 'rgba(255,255,255,0.1)';
         ctx.lineWidth = 2;
@@ -187,6 +191,29 @@ const MapComponent = () => {
     
     animate();
   };
+
+  if (hasError) {
+    return (
+      <section id="location" className="py-20 md:py-32 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-sanatorio-cream to-sanatorio-beige z-0"></div>
+        <div className="section-container relative z-10">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <span className="text-sm font-medium tracking-widest uppercase text-sanatorio-deepBlue opacity-90">
+              Virtual Location
+            </span>
+            <h2 className="mt-4 text-3xl md:text-5xl font-display font-medium">Visit San Otorio</h2>
+            <p className="mt-4 text-lg text-sanatorio-charcoal/80 max-w-xl mx-auto leading-relaxed">
+              Nestled along California's breathtaking coastline, San Otorio offers a serene retreat from everyday life.
+            </p>
+          </div>
+          <div className="glass-panel p-8 text-center">
+            <p className="text-sanatorio-charcoal">Our interactive map visualization is taking a moment to load.</p>
+            <p className="mt-2 text-sanatorio-charcoal/70">Please enjoy the other aspects of your virtual retreat experience.</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="location" className="py-20 md:py-32 relative overflow-hidden">

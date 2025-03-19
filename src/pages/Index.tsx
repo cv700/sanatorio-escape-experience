@@ -1,14 +1,16 @@
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import Hero from '../components/Hero';
 import Experience from '../components/Experience';
 import MapComponent from '../components/Map';
 import Ambience from '../components/Ambience';
 import Footer from '../components/Footer';
+import { toast } from 'sonner';
 
 const Index = () => {
   const [error, setError] = useState<Error | null>(null);
+  const [mapError, setMapError] = useState<boolean>(false);
   
   // Smooth scrolling for anchor links
   useEffect(() => {
@@ -45,6 +47,13 @@ const Index = () => {
     }
   }, []);
 
+  // Error boundary for map component
+  const handleMapError = (error: Error) => {
+    console.error('Error rendering map:', error);
+    setMapError(true);
+    toast.error('Map visualization could not be loaded');
+  };
+
   if (error) {
     return (
       <div className="min-h-screen bg-sanatorio-darkGreen flex items-center justify-center">
@@ -79,12 +88,43 @@ const Index = () => {
         <Header />
         <Hero />
         <Experience />
-        <MapComponent />
+        
+        {mapError ? (
+          <div id="location" className="section-container">
+            <div className="glass-panel p-8 text-center">
+              <h2 className="text-2xl font-display text-sanatorio-neon mb-4">
+                LOCATION VISUALIZATION UNAVAILABLE
+              </h2>
+              <p className="text-sanatorio-mint/80">
+                Our digital map service is currently experiencing issues. Please try again later.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <ErrorBoundary onError={handleMapError}>
+            <MapComponent />
+          </ErrorBoundary>
+        )}
+        
         <Ambience />
         <Footer />
       </div>
     </div>
   );
 };
+
+// Simple error boundary component
+class ErrorBoundary extends React.Component<{
+  children: React.ReactNode;
+  onError: (error: Error) => void;
+}> {
+  componentDidCatch(error: Error) {
+    this.props.onError(error);
+  }
+
+  render() {
+    return this.props.children;
+  }
+}
 
 export default Index;
